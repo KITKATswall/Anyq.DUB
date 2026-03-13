@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AnyqDUB | АДМИН ПАНЕЛЬ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        :root {
+            --neon-pink: #ff1a8c;
+            --neon-purple: #b300ff;
+            --neon-blue: #00ffff;
+            --bg-dark: #0a0a0f;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a0f, #1a0a1f);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .admin-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* ХЕДЕР */
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 30px;
+            background: rgba(255,26,140,0.1);
+            border: 2px solid var(--neon-pink);
+            border-radius: 50px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 0 70px rgba(255,26,140,0.3);
+        }
+
+        .admin-header h1 {
+            font-size: clamp(24px, 5vw, 36px);
+            background: linear-gradient(135deg, #fff, var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px var(--neon-pink);
+        }
+
+        .stats {
+            font-size: 20px;
+            color: var(--neon-pink);
+            background: rgba(0,0,0,0.5);
+            padding: 10px 25px;
+            border-radius: 40px;
+            border: 1px solid var(--neon-pink);
+        }
+
+        /* ФОРМА ДОБАВЛЕНИЯ */
+        .add-form {
+            background: rgba(20,10,30,0.8);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--neon-pink);
+            border-radius: 50px;
+            padding: 40px;
+            margin-bottom: 50px;
+            box-shadow: 0 0 100px rgba(255,26,140,0.3);
+        }
+
+        .add-form h2 {
+            font-size: clamp(20px, 4vw, 28px);
+            margin-bottom: 30px;
+            color: #fff;
+            text-shadow: 0 0 20px var(--neon-pink);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: var(--neon-pink);
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(0,0,0,0.5);
+            border: 2px solid rgba(255,26,140,0.3);
+            border-radius: 30px;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: var(--neon-pink);
+            outline: none;
+            box-shadow: 0 0 40px var(--neon-pink);
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* СЕКЦИЯ СЕРИЙ */
+        .episodes-section {
+            background: rgba(0,0,0,0.3);
+            border-radius: 40px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 1px solid var(--neon-purple);
+        }
+
+        .episode-input {
+            display: grid;
+            grid-template-columns: 80px 1fr 2fr auto;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 15px;
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 30px;
+        }
+
+        .episode-input input {
+            padding: 12px;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--neon-pink);
+            border-radius: 20px;
+            color: white;
+        }
+
+        .remove-episode {
+            background: rgba(255,0,0,0.3);
+            border: 1px solid red;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+        }
+
+        .remove-episode:hover {
+            background: rgba(255,0,0,0.8);
+            transform: scale(1.2);
+        }
+
+        .add-episode {
+            background: transparent;
+            border: 2px dashed var(--neon-pink);
+            color: var(--neon-pink);
+            padding: 15px;
+            border-radius: 40px;
+            width: 100%;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 20px;
+        }
+
+        .add-episode:hover {
+            background: rgba(255,26,140,0.2);
+            border-style: solid;
+        }
+
+        /* КНОПКИ */
+        .submit-btn {
+            background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+            border: none;
+            color: white;
+            padding: 20px 40px;
+            border-radius: 60px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            box-shadow: 0 0 50px var(--neon-pink);
+        }
+
+        .submit-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 80px var(--neon-pink);
+        }
+
+        /* СПИСОК АНИМЕ */
+        .anime-list {
+            background: rgba(20,10,30,0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 40px;
+            border: 1px solid var(--neon-pink);
+        }
+
+        .anime-item {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 30px;
+            background: rgba(255,26,140,0.1);
+            border-radius: 40px;
+            margin-bottom: 30px;
+            border: 1px solid var(--neon-pink);
+            transition: 0.3s;
+        }
+
+        .anime-item:hover {
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 50px rgba(179,0,255,0.3);
+        }
+
+        .anime-main {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .anime-preview {
+            width: 150px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 30px;
+            border: 3px solid var(--neon-pink);
+            box-shadow: 0 0 40px var(--neon-pink);
+        }
+
+        .anime-details {
+            flex: 1;
+        }
+
+        .anime-details h3 {
+            font-size: 24px;
+            color: #fff;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px var(--neon-pink);
+        }
+
+        .anime-details p {
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        .episodes-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 30px;
+        }
+
+        .episode-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            border: 1px solid var(--neon-purple);
+        }
+
+        .episode-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .delete-btn {
+            background: rgba(255,0,0,0.2);
+            border: 1px solid red;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: bold;
+        }
+
+        .delete-btn:hover {
+            background: rgba(255,0,0,0.8);
+            transform: scale(1.05);
+        }
+
+        .edit-btn {
+            background: rgba(255,26,140,0.2);
+            border: 1px solid var(--neon-pink);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .edit-btn:hover {
+            background: rgba(255,26,140,0.8);
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .admin-header {
+                padding: 20px;
+            }
+            
+            .add-form {
+                padding: 25px;
+            }
+            
+            .episode-input {
+                grid-template-columns: 1fr;
+            }
+            
+            .anime-main {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .anime-preview {
+                width: 200px;
+                height: 260px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1>⚡ AnyqDUB ADMIN PANEL</h1>
+            <div class="stats" id="stats">Аниме: 0 | Серий: 0</div>
+        </div>
+
+        <!-- ФОРМА ДОБАВЛЕНИЯ -->
+        <div class="add-form" id="addForm">
+            <h2>➕ ЖАҢА АНИМЕ ҚОСУ</h2>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label>АТАУЫ (қазақша)</label>
+                    <input type="text" id="titleInput" placeholder="Мысалы: Наруто: Ураганды хроникалар">
+                </div>
+                <div class="form-group">
+                    <label>ПОСТЕР (URL)</label>
+                    <input type="url" id="posterInput" placeholder="https://...">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>СИПАТТАМА</label>
+                <textarea id="descInput" placeholder="Аниме туралы толық сипаттама..."></textarea>
+            </div>
+
+            <!-- СЕРИЯЛАР -->
+            <div class="episodes-section">
+                <h3 style="margin-bottom: 20px; color: var(--neon-purple);">📺 СЕРИЯЛАР</h3>
+                <div id="episodesContainer"></div>
+                <button class="add-episode" onclick="addEpisodeField()">+ ЖАҢА СЕРИЯ ҚОСУ</button>
+            </div>
+
+            <button class="submit-btn" onclick="saveAnime()">АНИМЕ САҚТАУ ✨</button>
+        </div>
+
+        <!-- СПИСОК АНИМЕ -->
+        <div class="anime-list">
+            <h2 style="margin-bottom: 30px; color: var(--neon-pink);">📚 АНИМЕ ТІЗІМІ</h2>
+            <div id="animeListContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // ДАННЫЕ
+        // ============================================
+        let animeList = [];
+        let editingIndex = -1;
+
+        // ============================================
+        // ЗАГРУЗКА
+        // ============================================
+        function loadFromStorage() {
+            const stored = localStorage.getItem('anyqdub_anime');
+            if (stored) {
+                try {
+                    animeList = JSON.parse(stored);
+                } catch (e) {
+                    animeList = [];
+                }
+            } else {
+                animeList = [];
+            }
+            renderAnimeList();
+            updateStats();
+        }
+
+        function saveToStorage() {
+            localStorage.setItem('anyqdub_anime', JSON.stringify(animeList));
+            loadFromStorage(); // ПЕРЕЗАГРУЗКА
+        }
+
+        function updateStats() {
+            const totalEpisodes = animeList.reduce((acc, anime) => acc + (anime.episodes?.length || 0), 0);
+            document.getElementById('stats').innerHTML = `Аниме: ${animeList.length} | Серий: ${totalEpisodes}`;
+        }
+
+        // ============================================
+        // РАБОТА С СЕРИЯМИ (ФОРМА)
+        // ============================================
+        let episodeFields = [];
+
+        function addEpisodeField(number = '', title = '', url = '') {
+            const container = document.getElementById('episodesContainer');
+            const episodeDiv = document.createElement('div');
+            episodeDiv.className = 'episode-input';
+            
+            const index = episodeFields.length;
+            
+            episodeDiv.innerHTML = `
+                <input type="number" placeholder="№" class="episode-number" value="${number}" min="1">
+                <input type="text" placeholder="Серия атауы" class="episode-title" value="${title}">
+                <input type="url" placeholder="Видео URL (Rutube/VK/MP4)" class="episode-url" value="${url}">
+                <button class="remove-episode" onclick="removeEpisodeField(this)">✕</button>
+            `;
+            
+            container.appendChild(episodeDiv);
+            episodeFields.push(episodeDiv);
+        }
+
+        function removeEpisodeField(btn) {
+            const episodeDiv = btn.closest('.episode-input');
+            const index = episodeFields.indexOf(episodeDiv);
+            if (index > -1) {
+                episodeFields.splice(index, 1);
+            }
+            episodeDiv.remove();
+        }
+
+        function clearEpisodeFields() {
+            const container = document.getElementById('episodesContainer');
+            container.innerHTML = '';
+            episodeFields = [];
+        }
+
+        function getEpisodesFromFields() {
+            const episodes = [];
+            document.querySelectorAll('.episode-input').forEach(div => {
+                const number = div.querySelector('.episode-number').value;
+                const title = div.querySelector('.episode-title').value;
+                const url = div.querySelector('.episode-url').value;
+                
+                if (number && title && url) {
+                    episodes.push({
+                        number: parseInt(number),
+                        title: title,
+                        videoUrl: url
+                    });
+                }
+            });
+            return episodes;
+        }
+
+        // ============================================
+        // СОХРАНЕНИЕ
+        // ============================================
+        window.saveAnime = function() {
+            const title = document.getElementById('titleInput').value.trim();
+            const desc = document.getElementById('descInput').value.trim();
+            const poster = document.getElementById('posterInput').value.trim();
+            const episodes = getEpisodesFromFields();
+
+            if (!title || !desc || !poster) {
+                alert('Атауын, сипаттамасын және постерін толтыр!');
+                return;
+            }
+
+            const newAnime = {
+                title: title,
+                description: desc,
+                poster: poster,
+                episodes: episodes
+            };
+
+            if (editingIndex >= 0) {
+                animeList[editingIndex] = newAnime;
+                editingIndex = -1;
+            } else {
+                animeList.push(newAnime);
+            }
+
+            saveToStorage();
+            
+            // ТАЗАЛАУ
+            document.getElementById('titleInput').value = '';
+            document.getElementById('descInput').value = '';
+            document.getElementById('posterInput').value = '';
+            clearEpisodeFields();
+            
+            // 1 ДЕФОЛТ СЕРИЯ
+            addEpisodeField(1, '1-серия', '');
+        };
+
+        // ============================================
+        // ОТОБРАЖЕНИЕ
+        // ============================================
+        function renderAnimeList() {
+            const container = document.getElementById('animeListContainer');
+            container.innerHTML = '';
+
+            if (animeList.length === 0) {
+                container.innerHTML = '<p style="text-align:center; padding:50px;">Әзірше аниме жоқ 😢</p>';
+                return;
+            }
+
+            animeList.forEach((anime, index) => {
+                const animeDiv = document.createElement('div');
+                animeDiv.className = 'anime-item';
+
+                let episodesHTML = '';
+                if (anime.episodes && anime.episodes.length > 0) {
+                    episodesHTML = '<div class="episodes-list"><h4 style="color: var(--neon-purple);">Сериялар:</h4>';
+                    anime.episodes.forEach(ep => {
+                        episodesHTML += `
+                            <div class="episode-item">
+                                <span><span style="color: var(--neon-pink);">#${ep.number}</span> ${ep.title}</span>
+                                <div class="episode-actions">
+                                    <span style="color: #aaa; font-size: 12px;">${ep.videoUrl.substring(0, 30)}...</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    episodesHTML += '</div>';
+                }
+
+                animeDiv.innerHTML = `
+                    <div class="anime-main">
+                        <img src="${anime.poster}" class="anime-preview" onerror="this.src='https://via.placeholder.com/150x200/ff1a8c/ffffff?text=A'">
+                        <div class="anime-details">
+                            <h3>${anime.title}</h3>
+                            <p>${anime.description}</p>
+                            ${episodesHTML}
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 15px; justify-content: flex-end;">
+                        <button class="edit-btn" onclick="editAnime(${index})">✏️ ӨҢДЕУ</button>
+                        <button class="delete-btn" onclick="deleteAnime(${index})">🗑️ ЖОЮ</button>
+                    </div>
+                `;
+
+                container.appendChild(animeDiv);
+            });
+        }
+
+        // ============================================
+        // РЕДАКТИРОВАНИЕ
+        // ============================================
+        window.editAnime = function(index) {
+            const anime = animeList[index];
+            
+            document.getElementById('titleInput').value = anime.title;
+            document.getElementById('descInput').value = anime.description;
+            document.getElementById('posterInput').value = anime.poster;
+            
+            clearEpisodeFields();
+            
+            if (anime.episodes && anime.episodes.length > 0) {
+                anime.episodes.forEach(ep => {
+                    addEpisodeField(ep.number, ep.title, ep.videoUrl);
+                });
+            } else {
+                addEpisodeField(1, '1-серия', '');
+            }
+            
+            editingIndex = index;
+            
+            // СКРОЛЛ К ФОРМЕ
+            document.getElementById('addForm').scrollIntoView({ behavior: 'smooth' });
+        };
+
+        // ============================================
+        // УДАЛЕНИЕ
+        // ============================================
+        window.deleteAnime = function(index) {
+            if (confirm('Анимені жойғың келе ме?')) {
+                animeList.splice(index, 1);
+                saveToStorage();
+            }
+        };
+
+        // ============================================
+        // ИНИЦИАЛИЗАЦИЯ
+        // ============================================
+        loadFromStorage();
+        
+        // ДОБАВЛЯЕМ ПУСТУЮ СЕРИЮ ПО УМОЛЧАНИЮ
+        addEpisodeField(1, '1-серия', '');
+    </script>
+</body>
+</html>

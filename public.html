@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AnyqDUB | ҚАЗАҚША АНИМЕ ӘЛЕМІ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Montserrat', system-ui, sans-serif;
+        }
+
+        /* ПЕРЕМЕННЫЕ */
+        :root {
+            --neon-pink: #ff1a8c;
+            --neon-purple: #b300ff;
+            --neon-blue: #00ffff;
+            --glow-intensity: 0px 0px 30px;
+            --bg-dark: #0a0a0f;
+        }
+
+        body {
+            background: var(--bg-dark);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* АНИМИРОВАННЫЙ ФОН С ПАРТИКЛАМИ */
+        .anime-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 50%, #2a0033, #000000 80%);
+            z-index: -2;
+        }
+
+        .particle-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+            border-radius: 50%;
+            filter: blur(3px);
+            animation: floatParticle 20s infinite linear;
+            opacity: 0.3;
+        }
+
+        @keyframes floatParticle {
+            0% { transform: translateY(100vh) translateX(0) rotate(0deg); opacity: 0; }
+            20% { opacity: 0.5; }
+            80% { opacity: 0.5; }
+            100% { transform: translateY(-100px) translateX(100px) rotate(360deg); opacity: 0; }
+        }
+
+        /* ЭНЕРГЕТИЧЕСКИЕ ЛИНИИ */
+        .energy-lines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        .energy-line {
+            position: absolute;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(180deg, transparent, var(--neon-pink), var(--neon-purple), transparent);
+            animation: energyWave 8s infinite ease-in-out;
+        }
+
+        .energy-line:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .energy-line:nth-child(2) { left: 30%; animation-delay: 2s; width: 3px; }
+        .energy-line:nth-child(3) { left: 50%; animation-delay: 4s; }
+        .energy-line:nth-child(4) { left: 70%; animation-delay: 6s; width: 3px; }
+        .energy-line:nth-child(5) { left: 90%; animation-delay: 8s; }
+
+        @keyframes energyWave {
+            0% { transform: translateY(-100%) scaleY(0.5); opacity: 0; }
+            50% { transform: translateY(0) scaleY(1); opacity: 1; }
+            100% { transform: translateY(100%) scaleY(0.5); opacity: 0; }
+        }
+
+        /* НАВИГАЦИЯ С ГЛИТЧЕМ */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(10, 5, 20, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 2px solid var(--neon-pink);
+            box-shadow: 0 0 50px rgba(255, 26, 140, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-glow {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            font-weight: bold;
+            box-shadow: 0 0 40px var(--neon-pink);
+            animation: logoPulse 2s infinite alternate;
+        }
+
+        @keyframes logoPulse {
+            from { box-shadow: 0 0 30px var(--neon-pink); transform: scale(1); }
+            to { box-shadow: 0 0 60px var(--neon-purple); transform: scale(1.1); }
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            background: linear-gradient(135deg, #fff, var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+        }
+
+        /* ТРИГГЕР АДМИНКИ */
+        .admin-trigger {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: rgba(255, 26, 140, 0.1);
+            border: 2px solid var(--neon-pink);
+            border-radius: 40px;
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            font-size: 14px;
+        }
+
+        .admin-trigger::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(transparent, var(--neon-pink), transparent);
+            animation: rotate 4s linear infinite;
+            opacity: 0;
+            transition: 0.3s;
+        }
+
+        .admin-trigger:hover::before {
+            opacity: 1;
+        }
+
+        .admin-trigger:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 50px var(--neon-pink);
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .click-counter {
+            font-size: 12px;
+            color: var(--neon-pink);
+            background: rgba(0,0,0,0.5);
+            padding: 3px 8px;
+            border-radius: 20px;
+        }
+
+        /* ГЕРОЙ СЕКЦИЯ */
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            position: relative;
+        }
+
+        .hero h2 {
+            font-size: clamp(30px, 8vw, 60px);
+            background: linear-gradient(135deg, #fff, var(--neon-pink), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            font-weight: 900;
+            animation: glitchText 3s infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes glitchText {
+            0%, 100% { text-shadow: 2px 2px var(--neon-pink), -2px -2px var(--neon-blue); }
+            25% { text-shadow: -2px 2px var(--neon-purple), 2px -2px var(--neon-pink); }
+            50% { text-shadow: 2px -2px var(--neon-blue), -2px 2px var(--neon-purple); }
+            75% { text-shadow: -2px -2px var(--neon-pink), 2px 2px var(--neon-blue); }
+        }
+
+        .hero p {
+            font-size: clamp(14px, 4vw, 18px);
+            color: #ccc;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+            background: rgba(255,255,255,0.05);
+            padding: 30px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,26,140,0.3);
+        }
+
+        /* СЕКЦИЯ ЖАНРОВ */
+        .genres {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            padding: 20px;
+            margin: 30px 0;
+        }
+
+        .genre-tag {
+            padding: 12px 25px;
+            background: rgba(255,26,140,0.1);
+            border: 1px solid var(--neon-pink);
+            border-radius: 40px;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            backdrop-filter: blur(5px);
+            font-size: 14px;
+        }
+
+        .genre-tag:hover {
+            background: var(--neon-pink);
+            transform: translateY(-5px);
+            box-shadow: 0 0 40px var(--neon-pink);
+        }
+
+        /* ГРИД АНИМЕ */
+        .anime-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            padding: 30px 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* КАРТОЧКА АНИМЕ */
+        .anime-card {
+            background: rgba(20, 10, 30, 0.7);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255,26,140,0.3);
+            border-radius: 30px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .anime-card::before {
+            content: "";
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--neon-pink), var(--neon-purple), var(--neon-blue));
+            border-radius: 32px;
+            z-index: -1;
+            opacity: 0;
+            transition: 0.4s;
+        }
+
+        .anime-card:hover {
+            transform: translateY(-20px) scale(1.02);
+            border-color: transparent;
+        }
+
+        .anime-card:hover::before {
+            opacity: 1;
+            filter: blur(10px);
+        }
+
+        .anime-poster {
+            width: 100%;
+            aspect-ratio: 2/3;
+            object-fit: cover;
+            transition: 0.5s;
+            position: relative;
+        }
+
+        .anime-card:hover .anime-poster {
+            transform: scale(1.1);
+            filter: brightness(1.2) saturate(1.3);
+        }
+
+        .anime-info {
+            padding: 20px;
+            position: relative;
+            background: linear-gradient(180deg, transparent, rgba(0,0,0,0.9));
+        }
+
+        .anime-title {
+            font-size: 22px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #fff, var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .anime-description {
+            font-size: 14px;
+            color: #bbb;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        /* СЕРИИ */
+        .episodes-container {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+            background: rgba(0,0,0,0.5);
+            border-radius: 20px;
+            margin-top: 10px;
+        }
+
+        .anime-card.expanded .episodes-container {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .episode-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255,26,140,0.2);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .episode-item:hover {
+            background: rgba(255,26,140,0.2);
+            padding-left: 25px;
+        }
+
+        .episode-number {
+            color: var(--neon-pink);
+            font-weight: bold;
+        }
+
+        .episode-title {
+            flex: 1;
+            margin-left: 10px;
+            color: #fff;
+        }
+
+        .play-episode {
+            color: var(--neon-blue);
+            font-size: 20px;
+        }
+
+        /* КНОПКИ */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            width: 100%;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 5px 20px rgba(255,26,140,0.4);
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 40px var(--neon-pink);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--neon-pink);
+            color: #fff;
+            padding: 8px 15px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 14px;
+        }
+
+        .btn-secondary:hover {
+            background: var(--neon-pink);
+            box-shadow: 0 0 30px var(--neon-pink);
+        }
+
+        /* ПЛЕЕР */
+        .player-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.98);
+            z-index: 10000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(30px);
+        }
+
+        .player-container {
+            width: 95%;
+            max-width: 1200px;
+            position: relative;
+        }
+
+        .custom-player {
+            background: #1a1a2a;
+            border-radius: 30px;
+            overflow: hidden;
+            border: 3px solid var(--neon-pink);
+            box-shadow: 0 0 100px var(--neon-pink);
+        }
+
+        .player-video {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: black;
+        }
+
+        .player-controls {
+            padding: 20px;
+            background: rgba(10,10,20,0.95);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .player-btn {
+            background: none;
+            border: none;
+            color: var(--neon-pink);
+            font-size: 24px;
+            cursor: pointer;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+        }
+
+        .player-btn:hover {
+            background: rgba(255,26,140,0.3);
+            transform: scale(1.2);
+        }
+
+        .player-progress {
+            flex: 1;
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            cursor: pointer;
+            min-width: 150px;
+        }
+
+        .player-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-pink), var(--neon-purple));
+            border-radius: 10px;
+            width: 0%;
+            position: relative;
+        }
+
+        .player-time {
+            color: #fff;
+            font-size: 14px;
+            font-family: monospace;
+        }
+
+        .close-player {
+            position: absolute;
+            top: -45px;
+            right: 0;
+            background: var(--neon-pink);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            box-shadow: 0 0 30px var(--neon-pink);
+        }
+
+        /* ФУТЕР */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(0,0,0,0.8);
+            margin-top: 50px;
+            border-top: 2px solid var(--neon-pink);
+            font-size: 14px;
+        }
+
+        /* АДАПТАЦИЯ ДЛЯ ТЕЛЕФОНОВ */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 10px;
+            }
+            
+            .logo h1 {
+                font-size: 18px;
+            }
+            
+            .logo-glow {
+                width: 40px;
+                height: 40px;
+                font-size: 24px;
+            }
+            
+            .admin-trigger {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+            
+            .anime-grid {
+                grid-template-columns: 1fr;
+                padding: 15px;
+                gap: 20px;
+            }
+            
+            .hero p {
+                padding: 20px;
+                font-size: 14px;
+            }
+            
+            .player-controls {
+                padding: 10px;
+                gap: 10px;
+            }
+            
+            .player-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+            
+            .close-player {
+                top: -40px;
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+        }
+
+        /* СКРОЛЛБАР */
+        ::-webkit-scrollbar {
+            width: 10px;
+            background: #0a0a0f;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+        }
+    </style>
+</head>
+<body>
+    <!-- ФОН С ПАРТИКЛАМИ -->
+    <div class="anime-bg"></div>
+    <div class="particle-container" id="particles"></div>
+    <div class="energy-lines">
+        <div class="energy-line"></div>
+        <div class="energy-line"></div>
+        <div class="energy-line"></div>
+        <div class="energy-line"></div>
+        <div class="energy-line"></div>
+    </div>
+
+    <!-- НАВИГАЦИЯ -->
+    <nav class="navbar">
+        <div class="logo">
+            <div class="logo-glow">A</div>
+            <h1>AnyqDUB</h1>
+        </div>
+        <div class="admin-trigger" id="adminTrigger">
+            <span>🇰🇿 KAZAKH ANIME LIVE</span>
+            <span class="click-counter" id="clickCounter">0/5</span>
+        </div>
+    </nav>
+
+    <!-- ГЕРОЙ -->
+    <section class="hero">
+        <h2>АНЫҚ ДАУЫСТАҒЫ АНИМЕ</h2>
+        <p>
+            Қош келдіңіз, AnyqDUB! Біз жапон анимелерін қазақ тілінде дәлме-дәл аудармамен ұсынамыз. 
+            Әр интонация, әр эмоция — бәрі түпнұсқадағыдай. Бізбен бірге аниме әлеміне еніңіз!
+        </p>
+    </section>
+
+    <!-- ЖАНРЛАР -->
+    <div class="genres">
+        <span class="genre-tag">#Барлығы</span>
+        <span class="genre-tag">#Сёнен</span>
+        <span class="genre-tag">#Сёдзё</span>
+        <span class="genre-tag">#Фэнтези</span>
+        <span class="genre-tag">#Экшн</span>
+        <span class="genre-tag">#Романтика</span>
+        <span class="genre-tag">#Киберпанк</span>
+        <span class="genre-tag">#Меха</span>
+    </div>
+
+    <!-- ГРИД АНИМЕ -->
+    <div class="anime-grid" id="animeGrid"></div>
+
+    <!-- ПЛЕЕР -->
+    <div class="player-overlay" id="playerOverlay">
+        <div class="player-container">
+            <button class="close-player" id="closePlayer">✕ ЖАБУ</button>
+            <div class="custom-player">
+                <video class="player-video" id="animePlayer" controls></video>
+                <div class="player-controls">
+                    <button class="player-btn" id="playPauseBtn">▶</button>
+                    <div class="player-progress" id="progressBar">
+                        <div class="player-progress-fill" id="progressFill"></div>
+                    </div>
+                    <span class="player-time" id="timeDisplay">00:00 / 00:00</span>
+                    <button class="player-btn" id="fullscreenBtn">⛶</button>
+                    <button class="player-btn" id="volumeBtn">🔊</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ФУТЕР -->
+    <footer class="footer">
+        <p>© 2024 AnyqDUB — Қазақша аниме әлемі. Барлық құқықтар қорғалған.</p>
+        <p style="color: var(--neon-pink); margin-top: 10px;">⚡ Айзен деңгейіндегі сапа ⚡</p>
+    </footer>
+
+    <script>
+        // ============================================
+        // ПАРТИКЛДЫ ФОН
+        // ============================================
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 100; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const size = Math.random() * 6 + 2;
+                const left = Math.random() * 100;
+                const duration = Math.random() * 20 + 15;
+                const delay = Math.random() * 10;
+                
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.left = left + '%';
+                particle.style.animationDuration = duration + 's';
+                particle.style.animationDelay = delay + 's';
+                particle.style.background = `linear-gradient(135deg, hsl(${Math.random() * 60 + 280}, 100%, 50%), hsl(${Math.random() * 60 + 300}, 100%, 50%))`;
+                
+                container.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        // ============================================
+        // АДМИНКА ТРИГГЕР (5 КЛИКОВ)
+        // ============================================
+        let clickCount = 0;
+        const adminTrigger = document.getElementById('adminTrigger');
+        const clickCounter = document.getElementById('clickCounter');
+
+        adminTrigger.addEventListener('click', function(e) {
+            e.preventDefault();
+            clickCount++;
+            clickCounter.textContent = clickCount + '/5';
+            
+            if (clickCount >= 5) {
+                clickCount = 0;
+                clickCounter.textContent = '0/5';
+                window.open('adminpack/admin.html', '_blank');
+            }
+        });
+
+        // ============================================
+        // ДАННЫЕ АНИМЕ (LocalStorage)
+        // ============================================
+        let animeList = [];
+
+        function loadAnime() {
+            const stored = localStorage.getItem('anyqdub_anime');
+            if (stored) {
+                try {
+                    animeList = JSON.parse(stored);
+                } catch (e) {
+                    animeList = [];
+                }
+            }
+            
+            if (animeList.length === 0) {
+                // ТЕСТОВЫЕ ДАННЫЕ
+                animeList = [
+                    {
+                        title: "Наруто: Ураганды хроникалар",
+                        description: "Наруто мен Саскенің аңызға айналған оқиғасы. Жапон анимесінің классикасы! 500+ серия",
+                        poster: "https://via.placeholder.com/400x600/ff1a8c/ffffff?text=NARUTO",
+                        episodes: [
+                            { number: 1, title: "Үйге оралу", videoUrl: "https://rutube.ru/play/embed/477e88c96a2854e4da349bbb6be92463" },
+                            { number: 2, title: "Акацуки бастайды", videoUrl: "https://rutube.ru/play/embed/477e88c96a2854e4da349bbb6be92463" }
+                        ]
+                    },
+                    {
+                        title: "Соңғы самурай",
+                        description: "Феодалдық Жапониядағы самурайлардың соңғы күндері. Тарихи драма.",
+                        poster: "https://via.placeholder.com/400x600/b300ff/ffffff?text=SAMURAI",
+                        episodes: [
+                            { number: 1, title: "Самурай жолы", videoUrl: "https://rutube.ru/play/embed/477e88c96a2854e4da349bbb6be92463" },
+                            { number: 2, title: "Сегунның бұйрығы", videoUrl: "https://rutube.ru/play/embed/477e88c96a2854e4da349bbb6be92463" }
+                        ]
+                    }
+                ];
+            }
+            renderAnime();
+        }
+
+        function renderAnime() {
+            const grid = document.getElementById('animeGrid');
+            grid.innerHTML = '';
+
+            animeList.forEach((anime, animeIndex) => {
+                const card = document.createElement('div');
+                card.className = 'anime-card';
+                card.setAttribute('data-anime-index', animeIndex);
+
+                // ПОСТЕР И ИНФО
+                let episodesHTML = '';
+                if (anime.episodes && anime.episodes.length > 0) {
+                    episodesHTML = '<div class="episodes-container">';
+                    anime.episodes.forEach((ep, epIndex) => {
+                        episodesHTML += `
+                            <div class="episode-item" data-anime="${animeIndex}" data-episode="${epIndex}">
+                                <span class="episode-number">#${ep.number}</span>
+                                <span class="episode-title">${ep.title}</span>
+                                <span class="play-episode">▶</span>
+                            </div>
+                        `;
+                    });
+                    episodesHTML += '</div>';
+                }
+
+                card.innerHTML = `
+                    <img src="${anime.poster}" class="anime-poster" alt="${anime.title}" onerror="this.src='https://via.placeholder.com/400x600/ff1a8c/ffffff?text=POSTER'">
+                    <div class="anime-info">
+                        <h3 class="anime-title">${anime.title}</h3>
+                        <p class="anime-description">${anime.description}</p>
+                        <button class="btn-primary show-episodes">📺 СЕРИЯЛАР</button>
+                        ${episodesHTML}
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+
+            // НАВЕШИВАЕМ СОБЫТИЯ
+            document.querySelectorAll('.show-episodes').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const card = this.closest('.anime-card');
+                    card.classList.toggle('expanded');
+                    this.textContent = card.classList.contains('expanded') ? '▲ ЖАБУ' : '📺 СЕРИЯЛАР';
+                });
+            });
+
+            document.querySelectorAll('.episode-item').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const animeIndex = this.getAttribute('data-anime');
+                    const episodeIndex = this.getAttribute('data-episode');
+                    playEpisode(animeIndex, episodeIndex);
+                });
+            });
+        }
+
+        // ============================================
+        // ПЛЕЕР
+        // ============================================
+        const playerOverlay = document.getElementById('playerOverlay');
+        const animePlayer = document.getElementById('animePlayer');
+        const closePlayer = document.getElementById('closePlayer');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressFill = document.getElementById('progressFill');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const volumeBtn = document.getElementById('volumeBtn');
+
+        function playEpisode(animeIndex, episodeIndex) {
+            const anime = animeList[animeIndex];
+            const episode = anime.episodes[episodeIndex];
+            
+            if (episode && episode.videoUrl) {
+                // ДЛЯ RUTUBE И VK ВСТАВЛЯЕМ IFRAME
+                if (episode.videoUrl.includes('rutube') || episode.videoUrl.includes('vk')) {
+                    // СОЗДАЕМ IFRAME
+                    const iframe = document.createElement('iframe');
+                    iframe.src = episode.videoUrl + '?autoplay=1';
+                    iframe.style.width = '100%';
+                    iframe.style.height = '100%';
+                    iframe.style.border = 'none';
+                    iframe.allow = 'autoplay; encrypted-media';
+                    
+                    const videoContainer = document.querySelector('.player-video');
+                    videoContainer.innerHTML = '';
+                    videoContainer.appendChild(iframe);
+                } else {
+                    // ОБЫЧНОЕ ВИДЕО
+                    animePlayer.innerHTML = ''; // УБИРАЕМ IFRAME
+                    animePlayer.src = episode.videoUrl;
+                }
+                
+                playerOverlay.style.display = 'flex';
+            }
+        }
+
+        closePlayer.addEventListener('click', function() {
+            playerOverlay.style.display = 'none';
+            const videoContainer = document.querySelector('.player-video');
+            videoContainer.innerHTML = ''; // ОЧИЩАЕМ
+            animePlayer.src = ''; // СБРАСЫВАЕМ
+        });
+
+        // УПРАВЛЕНИЕ ПЛЕЕРОМ
+        playPauseBtn.addEventListener('click', function() {
+            if (animePlayer.paused) {
+                animePlayer.play();
+                playPauseBtn.textContent = '⏸';
+            } else {
+                animePlayer.pause();
+                playPauseBtn.textContent = '▶';
+            }
+        });
+
+        animePlayer.addEventListener('timeupdate', function() {
+            if (animePlayer.duration) {
+                const progress = (animePlayer.currentTime / animePlayer.duration) * 100;
+                progressFill.style.width = progress + '%';
+                
+                const current = formatTime(animePlayer.currentTime);
+                const duration = formatTime(animePlayer.duration);
+                timeDisplay.textContent = `${current} / ${duration}`;
+            }
+        });
+
+        progressBar.addEventListener('click', function(e) {
+            const rect = progressBar.getBoundingClientRect();
+            const pos = (e.clientX - rect.left) / rect.width;
+            animePlayer.currentTime = pos * animePlayer.duration;
+        });
+
+        fullscreenBtn.addEventListener('click', function() {
+            if (animePlayer.requestFullscreen) {
+                animePlayer.requestFullscreen();
+            }
+        });
+
+        volumeBtn.addEventListener('click', function() {
+            animePlayer.muted = !animePlayer.muted;
+            volumeBtn.textContent = animePlayer.muted ? '🔇' : '🔊';
+        });
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60) || 0;
+            const secs = Math.floor(seconds % 60) || 0;
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // ЗАГРУЗКА
+        loadAnime();
+
+        // ОБНОВЛЕНИЕ ПРИ ИЗМЕНЕНИИ STORAGE
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'anyqdub_anime') {
+                loadAnime();
+            }
+        });
+    </script>
+</body>
+</html>
